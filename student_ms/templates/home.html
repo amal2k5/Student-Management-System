@@ -1,0 +1,38 @@
+{% extends "base_public.html" %}
+{% block content %}
+{% load static %}
+
+<div class="d-flex flex-column align-items-center text-center" style="margin-top: 90px;">
+
+  
+    <h1 class="display-4 fw-bold text-dark mb-3">
+        Welcome to Student Management System
+    </h1>
+
+    <p class="lead text-muted mb-4">
+        Manage student records, and profiles effortlessly.
+    </p>
+
+    <div class="d-flex gap-3 mt-3">
+
+        <a href="{% url 'login' %}" 
+           class="btn btn-primary btn-lg px-5 py-2 shadow">
+            Login
+        </a>
+
+        <a href="/accounts/register-full/" 
+           class="btn btn-success btn-lg px-5 py-2 shadow">
+            Student Register
+        </a>
+
+    </div>
+
+  
+    {% comment %} <div class="mt-5">
+        <img src="{% static 'images/home.jpg' %}" 
+             width="700" height="300" class="opacity-75">
+    </div> {% endcomment %}
+
+</div>
+
+{% endblock %}

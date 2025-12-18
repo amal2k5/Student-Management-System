@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .form-card {
+        border-radius: 14px;
+        border: none;
+    }
+
+    .form-section-title {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    input, select {
+        border-radius: 8px !important;
+    }
+
+    .divider {
+        border-top: 1px solid #eee;
+        margin: 2rem 0;
+    }
+
+    .profile-preview {
+        width: 110px;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+   <div class="card shadow-lg border rounded-4">
+
+
+        <!-- HEADER -->
+        <div class="card-header bg-white border-bottom px-4 py-3 rounded-top-4">
+            <h4 class="mb-0 fw-semibold">Edit Student</h4>
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body px-4 py-4">
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- USER DETAILS -->
+                <div class="form-section-title">User Account Details</div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Username</label>
+                        {{ user_form.username }}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        {{ user_form.email }}
+                    </div>
+                </div>
+
+                <!-- PROFILE PIC -->
+                <div class="mb-3">
+                    <label class="form-label">Profile Picture</label><br>
+
+                    {% if student.profile_pic %}
+                        <img src="{{ student.profile_pic.url }}"
+                             class="profile-preview mb-2">
+                    {% endif %}
+
+                    {{ student_form.profile_pic }}
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- STUDENT DETAILS -->
+                <div class="form-section-title">Student Details</div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Full Name</label>
+                        {{ student_form.name }}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Roll Number</label>
+                        {{ student_form.roll_number }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Department</label>
+                        {{ student_form.department }}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Year of Admission</label>
+                        {{ student_form.year_of_admission }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Date of Birth</label>
+                    {{ student_form.date_of_birth }}
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- PASSWORD -->
+                <div class="form-section-title">Change Password (Optional)</div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="new_password1" class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="new_password2" class="form-control">
+                    </div>
+                </div>
+
+                <!-- SUBMIT -->
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success px-5 py-2">
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

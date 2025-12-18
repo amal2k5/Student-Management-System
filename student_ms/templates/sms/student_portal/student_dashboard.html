@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+
+    <h2 class="fw-bold text-center mb-4 text-primary">
+        Welcome, {{ student.name }}
+    </h2>
+
+    <div class="card shadow-lg p-4" style="border-radius: 16px; max-width: 900px; margin: auto;">
+
+        <div class="row align-items-center">
+
+ 
+            <div class="col-md-4 text-center mb-3">
+                {% if student.profile_pic %}
+                    <img src="{{ student.profile_pic.url }}" 
+                         class="rounded-circle shadow-sm"
+                         style="width: 160px; height: 160px; object-fit: cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/160" 
+                         class="rounded-circle shadow-sm">
+                {% endif %}
+            </div>
+
+
+            <div class="col-md-8">
+
+                <h3 class="mb-3 fw-semibold">{{ student.name }}</h3>
+
+                <ul class="list-group list-group-flush">
+
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <strong>Roll Number:</strong>
+                        <span>{{ student.roll_number }}</span>
+                    </li>
+
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <strong>Email:</strong>
+                        <span>{{ student.user.email }}</span>
+                    </li>
+
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <strong>Department:</strong>
+                        <span>{{ student.department }}</span>
+                    </li>
+
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <strong>Year of Admission:</strong>
+                        <span>{{ student.year_of_admission }}</span>
+                    </li>
+
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <strong>Date of Birth:</strong>
+                        <span>{{ student.date_of_birth|default:"Not provided" }}</span>
+                    </li>
+                </ul>
+
+
+                <div class="mt-4 d-flex gap-2">
+                    <a href="{% url 'sms:student_edit_profile' %}" 
+                       class="btn btn-primary w-50">
+                        Edit Profile
+                    </a>
+
+                    <a href="/accounts/password_change/" 
+                       class="btn btn-outline-secondary w-50">
+                        Change Password
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

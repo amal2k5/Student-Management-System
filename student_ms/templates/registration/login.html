@@ -1,0 +1,104 @@
+{% extends "base_public.html" %}
+{% block content %}
+
+<style>
+    .login-card {
+        width: 420px;
+        border-radius: 14px;
+        border: none;
+        background: #ffffff;
+    }
+
+    .login-title {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #333;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        transition: all 0.2s ease;
+    }
+
+    input:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.15rem rgba(13,110,253,.25);
+        outline: none;
+    }
+
+    .btn-primary {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .btn-success {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center mt-5">
+
+    <div class="card shadow-lg p-4 login-card">
+
+        <h3 class="text-center login-title mb-2">Welcome Back</h3>
+        <p class="text-center text-muted mb-4">Login to continue</p>
+
+        {% if form.errors %}
+        <div class="alert alert-danger py-2 text-center">
+            Invalid username or password
+        </div>
+        {% endif %}
+
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+
+          
+            <div class="mb-3">
+                <label class="form-label">{{ form.username.label }}</label>
+                {{ form.username }}
+            </div>
+
+            
+            <div class="mb-4">
+                <label class="form-label">{{ form.password.label }}</label>
+                {{ form.password }}
+            </div>
+
+
+            <button class="btn btn-primary w-100 py-2 mb-3" type="submit">
+                Login
+            </button>
+
+            <div class="text-center mb-3">
+                <a href="{% url 'password_reset' %}" class="forgot-link text-decoration-none small text-primary">
+                    Forgot Password?
+                </a>
+            </div>
+        </form>
+
+        <hr>
+
+        <div class="text-center">
+            <p class="mb-2 small text-muted">Don't have an account?</p>
+            <a href="/accounts/register-full/" class="btn btn-success btn-sm px-4">
+                Register
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
