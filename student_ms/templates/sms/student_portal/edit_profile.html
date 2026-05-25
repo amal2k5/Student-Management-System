@@ -1,84 +1,265 @@
-{% extends "base.html" %}
+{% extends "base_public.html" %}
 {% block content %}
 
-<div class="container mt-4">
-    <div class="card shadow p-4" style="max-width: 700px; margin: auto; border-radius: 12px;">
-
-        <h3 class="text-center mb-4">Edit Profile</h3>
-
-      
-        <div class="alert alert-secondary">
-            <strong>Roll Number:</strong> {{ student.roll_number }} <br>
-            <strong>Year of Admission:</strong> {{ student.year_of_admission }}
+<div class="container mt-4 mb-5">
+    <!-- Breadcrumb Navigation -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'sms:student_detail' student.id %}" class="text-decoration-none">My Profile</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+                </ol>
+            </nav>
         </div>
+    </div>
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+    <!-- Page Header -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold" style="color: #1a2a4f;">
+            <i class="fas fa-user-edit me-2"></i>Edit Profile
+        </h2>
+        <p class="text-muted">Update your personal information and profile picture</p>
+    </div>
 
-            <div class="row">
-
-                <input type="hidden" name="roll_number" value="{{ student.roll_number }}">
-<input type="hidden" name="year_of_admission" value="{{ student.year_of_admission }}">
-
-
+    <!-- Edit Form Card -->
+    <div class="card shadow-sm border-0 rounded-4" style="max-width: 800px; margin: auto;">
+        <div class="card-body p-4 p-md-5">
             
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Full Name</label>
-                    {{ form.name }}
-                </div>
-
-              <div class="col-md-6 mb-3">
-    <label class="form-label">Email</label>
-    <input type="email" name="email" value="{{ user.email }}" class="form-control">
-
-
-</div>
-
-            </div>
-
-            <div class="row">
-
-        
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Department</label>
-                    {{ form.department }}
-                </div>
-
-              
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Date of Birth</label>
-                    {{ form.date_of_birth }}
-                </div>
-
-            </div>
-
-            
-            <div class="mb-3">
-                <label class="form-label">Profile Picture</label>
-                {{ form.profile_pic }}
-
-                {% if student.profile_pic %}
-                    <div class="mt-2">
-                        <img src="{{ student.profile_pic.url }}" width="100" height="100" class="rounded">
+            <!-- Read-only Information Alert -->
+            <div class="alert alert-info bg-light border-0 rounded-3 mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle fa-2x me-3" style="color: #2c5282;"></i>
+                    <div>
+                        <small class="text-muted d-block">The following information cannot be changed</small>
+                        <strong>Roll Number:</strong> {{ student.roll_number }} &nbsp;|&nbsp;
+                        <strong>Year of Admission:</strong> {{ student.year_of_admission }}
                     </div>
-                {% endif %}
+                </div>
             </div>
-            
 
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
 
+                <!-- Hidden Fields (Preserved) -->
+                <input type="hidden" name="roll_number" value="{{ student.roll_number }}">
+                <input type="hidden" name="year_of_admission" value="{{ student.year_of_admission }}">
 
-            
+                <!-- Name and Email Row -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-user me-1 text-primary"></i>Full Name
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.name.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
 
-            <button class="btn btn-primary w-100 py-2">Save Changes</button>
-                
-<a href="{% url 'password_change' %}" class="btn btn-warning w-100 mt-3">
-    Change Password
-</a>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-envelope me-1 text-primary"></i>Email Address
+                        </label>
+                        <input type="email" name="email" value="{{ user.email }}" class="form-control">
+                        <small class="text-muted">Email cannot be changed. Contact admin for assistance.</small>
+                    </div>
+                </div>
 
+                <!-- Department and Date of Birth Row -->
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-building me-1 text-primary"></i>Department
+                        </label>
+                        {{ form.department }}
+                        {% if form.department.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.department.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
 
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-calendar-alt me-1 text-primary"></i>Date of Birth
+                        </label>
+                        {{ form.date_of_birth }}
+                        {% if form.date_of_birth.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.date_of_birth.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
 
-        </form>
+                <!-- Profile Picture Section -->
+                <div class="mt-4">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-camera me-1 text-primary"></i>Profile Picture
+                    </label>
+                    {{ form.profile_pic }}
+                    
+                    {% if student.profile_pic %}
+                        <div class="mt-3 p-3 bg-light rounded-3 d-flex align-items-center gap-3">
+                            <img src="{{ student.profile_pic.url }}" width="80" height="80" class="rounded-circle shadow-sm">
+                            <div>
+                                <small class="text-muted d-block">Current profile picture</small>
+                                <small class="text-secondary">Upload a new image to replace it</small>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="mt-2 text-muted small">
+                            <i class="fas fa-info-circle"></i> No profile picture uploaded
+                        </div>
+                    {% endif %}
+                    
+                    {% if form.profile_pic.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.profile_pic.errors|striptags }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-4 pt-3">
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                    
+                    <div class="row g-2 mt-3">
+                        <div class="col-md-6">
+                            <a href="{% url 'password_change' %}" class="btn btn-outline-warning w-100 py-2">
+                                <i class="fas fa-key me-2"></i>Change Password
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'sms:student_detail' student.id %}" class="btn btn-outline-secondary w-100 py-2">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<style>
+    /* Form field styling */
+    form input:not([type="hidden"]):not([type="file"]),
+    form select,
+    form textarea {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.95rem;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        background-color: #fff;
+    }
+    
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+        border-color: #2c5282;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.1);
+    }
+    
+    /* File input styling */
+    form input[type="file"] {
+        padding: 0.4rem 0.75rem;
+        border: 1px dashed #ced4da;
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+    
+    form input[type="file"]:hover {
+        border-color: #2c5282;
+        background-color: #f0f4f8;
+    }
+    
+    /* Email field styling */
+    input[name="email"] {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }
+    
+    /* Button styling */
+    .btn-primary {
+        background-color: #1a2a4f;
+        border-color: #1a2a4f;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0f1a33;
+        border-color: #0f1a33;
+        transform: translateY(-1px);
+    }
+    
+    .btn-outline-warning {
+        border-color: #ffc107;
+        color: #856404;
+    }
+    
+    .btn-outline-warning:hover {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        transform: translateY(-1px);
+        color: #856404;
+    }
+    
+    .btn-outline-secondary:hover {
+        transform: translateY(-1px);
+    }
+    
+    /* Alert styling */
+    .alert-info {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+    }
+    
+    .breadcrumb-item a {
+        color: #2c5282;
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item a:hover {
+        text-decoration: underline;
+    }
+    
+    .breadcrumb-item.active {
+        color: #6c757d;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .row.g-3 {
+            margin-top: 0;
+        }
+    }
+</style>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 {% endblock %}

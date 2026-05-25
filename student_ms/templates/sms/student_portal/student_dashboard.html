@@ -1,79 +1,212 @@
-{% extends "base.html" %}
+{% extends "base_public.html" %}
 {% block content %}
 
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
 
+    <!-- Welcome Section -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold" style="color: #1a2a4f;">
+            Welcome, {{ student.name }}
+        </h2>
+        <p class="text-muted">Manage your personal information and account settings</p>
+    </div>
 
-    <h2 class="fw-bold text-center mb-4 text-primary">
-        Welcome, {{ student.name }}
-    </h2>
-
-    <div class="card shadow-lg p-4" style="border-radius: 16px; max-width: 900px; margin: auto;">
-
-        <div class="row align-items-center">
-
- 
-            <div class="col-md-4 text-center mb-3">
-                {% if student.profile_pic %}
-                    <img src="{{ student.profile_pic.url }}" 
-                         class="rounded-circle shadow-sm"
-                         style="width: 160px; height: 160px; object-fit: cover;">
-                {% else %}
-                    <img src="https://via.placeholder.com/160" 
-                         class="rounded-circle shadow-sm">
-                {% endif %}
-            </div>
-
-
-            <div class="col-md-8">
-
-                <h3 class="mb-3 fw-semibold">{{ student.name }}</h3>
-
-                <ul class="list-group list-group-flush">
-
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <strong>Roll Number:</strong>
-                        <span>{{ student.roll_number }}</span>
-                    </li>
-
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <strong>Email:</strong>
-                        <span>{{ student.user.email }}</span>
-                    </li>
-
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <strong>Department:</strong>
-                        <span>{{ student.department }}</span>
-                    </li>
-
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <strong>Year of Admission:</strong>
-                        <span>{{ student.year_of_admission }}</span>
-                    </li>
-
-                    <li class="list-group-item px-0 d-flex justify-content-between">
-                        <strong>Date of Birth:</strong>
-                        <span>{{ student.date_of_birth|default:"Not provided" }}</span>
-                    </li>
-                </ul>
-
-
-                <div class="mt-4 d-flex gap-2">
-                    <a href="{% url 'sms:student_edit_profile' %}" 
-                       class="btn btn-primary w-50">
-                        Edit Profile
-                    </a>
-
-                    <a href="/accounts/password_change/" 
-                       class="btn btn-outline-secondary w-50">
-                        Change Password
-                    </a>
+    <!-- Profile Card -->
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden" style="max-width: 1000px; margin: auto;">
+        <div class="card-body p-4 p-md-5">
+            <div class="row align-items-center g-4">
+                
+                <!-- Profile Picture Section -->
+                <div class="col-md-4 text-center">
+                    <div class="position-relative d-inline-block">
+                        {% if student.profile_pic %}
+                            <img src="{{ student.profile_pic.url }}" 
+                                 class="rounded-circle shadow-sm border border-3 border-primary"
+                                 style="width: 180px; height: 180px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto shadow-sm border border-3 border-primary"
+                                 style="width: 180px; height: 180px;">
+                                <i class="fas fa-user-graduate fa-4x" style="color: #2c5282;"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Role Badge -->
+                    <div class="mt-3">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                            <i class="fas fa-graduation-cap me-1"></i> Student
+                        </span>
+                    </div>
                 </div>
 
+                <!-- Student Information Section -->
+                <div class="col-md-8">
+                    <h3 class="fw-bold mb-3" style="color: #1a2a4f;">{{ student.name }}</h3>
+                    
+                    <div class="row g-3">
+                        <!-- Roll Number -->
+                        <div class="col-sm-6">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    <i class="fas fa-id-card me-1"></i> Roll Number
+                                </small>
+                                <span class="fw-semibold">{{ student.roll_number }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-sm-6">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    <i class="fas fa-envelope me-1"></i> Email Address
+                                </small>
+                                <span class="fw-semibold">{{ student.user.email }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Department -->
+                        <div class="col-sm-6">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    <i class="fas fa-building me-1"></i> Department
+                                </small>
+                                <span class="fw-semibold">{{ student.department }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Year of Admission -->
+                        <div class="col-sm-6">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    <i class="fas fa-calendar-alt me-1"></i> Year of Admission
+                                </small>
+                                <span class="fw-semibold">{{ student.year_of_admission }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div class="col-sm-6">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    <i class="fas fa-birthday-cake me-1"></i> Date of Birth
+                                </small>
+                                <span class="fw-semibold">{{ student.date_of_birth|default:"Not provided" }}</span>
+                            </div>
+                        </div>
+
+                        <!-- User ID -->
+                        <div class="col-sm-6">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    <i class="fas fa-user me-1"></i> Username
+                                </small>
+                                <span class="fw-semibold">{{ student.user.username }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="mt-4 pt-2">
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="{% url 'sms:student_edit_profile' %}" 
+                               class="btn btn-primary px-4 py-2 flex-grow-1 flex-sm-grow-0">
+                                <i class="fas fa-edit me-2"></i>Edit Profile
+                            </a>
+
+                            <a href="{% url 'password_change' %}" 
+                               class="btn btn-outline-secondary px-4 py-2 flex-grow-1 flex-sm-grow-0">
+                                <i class="fas fa-key me-2"></i>Change Password
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
+    <!-- Additional Information Card (Optional) -->
+    <div class="text-center mt-4">
+        <p class="small text-muted">
+            <i class="fas fa-shield-alt me-1"></i> Your information is secure and encrypted
+        </p>
     </div>
 </div>
+
+<style>
+    .bg-light {
+        background-color: #f8f9fa !important;
+        transition: all 0.2s ease;
+    }
+    
+    .bg-light:hover {
+        background-color: #e9ecef !important;
+        transform: translateY(-2px);
+    }
+    
+    .btn-primary {
+        background-color: #1a2a4f;
+        border-color: #1a2a4f;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0f1a33;
+        border-color: #0f1a33;
+        transform: translateY(-1px);
+    }
+    
+    .btn-outline-primary {
+        border-color: #1a2a4f;
+        color: #1a2a4f;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #1a2a4f;
+        border-color: #1a2a4f;
+        transform: translateY(-1px);
+    }
+    
+    .btn-outline-secondary:hover {
+        transform: translateY(-1px);
+    }
+    
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+    }
+    
+    .breadcrumb-item a {
+        color: #2c5282;
+    }
+    
+    .breadcrumb-item.active {
+        color: #6c757d;
+    }
+    
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 {% endblock %}

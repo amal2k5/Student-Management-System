@@ -1,3 +1,4 @@
+from django.contrib.messages import constants as messages
 from pathlib import Path
 from decouple import config
 
@@ -160,7 +161,6 @@ PASSWORD_RESET_TIMEOUT = 3600
 
 
 
-from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
     messages.DEBUG: "secondary",
