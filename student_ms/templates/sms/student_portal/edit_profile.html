@@ -1,265 +1,931 @@
 {% extends "base_public.html" %}
 {% block content %}
 
-<div class="container mt-4 mb-5">
-    <!-- Breadcrumb Navigation -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'sms:student_detail' student.id %}" class="text-decoration-none">My Profile</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8 col-md-10">
+
+            <!-- Breadcrumb -->
+            <nav class="mb-4">
+                <ol class="breadcrumb bg-transparent p-0">
+
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'dashboard' %}"
+                           class="text-decoration-none">
+                           Dashboard
+                        </a>
+                    </li>
+
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'sms:student_detail' student.id %}"
+                           class="text-decoration-none">
+                           Profile
+                        </a>
+                    </li>
+
+                    <li class="breadcrumb-item active">
+                        Edit Profile
+                    </li>
+
                 </ol>
             </nav>
-        </div>
-    </div>
 
-    <!-- Page Header -->
-    <div class="text-center mb-4">
-        <h2 class="fw-bold" style="color: #1a2a4f;">
-            <i class="fas fa-user-edit me-2"></i>Edit Profile
-        </h2>
-        <p class="text-muted">Update your personal information and profile picture</p>
-    </div>
+            <!-- Main Card -->
+            <div class="card main-card border-0 overflow-hidden">
 
-    <!-- Edit Form Card -->
-    <div class="card shadow-sm border-0 rounded-4" style="max-width: 800px; margin: auto;">
-        <div class="card-body p-4 p-md-5">
-            
-            <!-- Read-only Information Alert -->
-            <div class="alert alert-info bg-light border-0 rounded-3 mb-4">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-info-circle fa-2x me-3" style="color: #2c5282;"></i>
-                    <div>
-                        <small class="text-muted d-block">The following information cannot be changed</small>
-                        <strong>Roll Number:</strong> {{ student.roll_number }} &nbsp;|&nbsp;
-                        <strong>Year of Admission:</strong> {{ student.year_of_admission }}
+                <!-- Top Accent -->
+                <div class="top-accent"></div>
+
+                <div class="card-body p-5">
+
+                    <!-- Header -->
+                    <div class="text-center mb-5">
+
+                        <div class="header-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+
+                        <h2 class="page-title">
+                            Edit Profile
+                        </h2>
+
+                        <p class="page-subtitle">
+                            Update your personal information and profile details
+                        </p>
+
                     </div>
+
+                    <!-- Read Only Section -->
+                    <div class="info-card mb-5">
+
+                        <div class="row g-4">
+
+                            <div class="col-md-6">
+
+                                <div class="info-box">
+
+                                    <span class="info-label">
+                                        Roll Number
+                                    </span>
+
+                                    <div class="info-value">
+                                        {{ student.roll_number }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="info-box">
+
+                                    <span class="info-label">
+                                        Year of Admission
+                                    </span>
+
+                                    <div class="info-value">
+                                        {{ student.year_of_admission }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- FORM -->
+                    <form method="post"
+                          enctype="multipart/form-data"
+                          id="editProfileForm">
+
+                        {% csrf_token %}
+
+                        <input type="hidden"
+                               name="roll_number"
+                               value="{{ student.roll_number }}">
+
+                        <input type="hidden"
+                               name="year_of_admission"
+                               value="{{ student.year_of_admission }}">
+
+                        <!-- ====================================== -->
+                        <!-- PREMIUM PROFILE SECTION -->
+                        <!-- ====================================== -->
+
+                        <div class="profile-section text-center mb-5">
+
+                            <div class="profile-image-wrapper">
+
+                                {% if student.profile_pic %}
+
+                                    <img src="{{ student.profile_pic.url }}"
+                                         id="currentProfilePic"
+                                         class="profile-image">
+
+                                {% else %}
+
+                                    <div id="profilePlaceholder"
+                                         class="profile-placeholder">
+
+                                        <i class="fas fa-user-graduate"></i>
+
+                                    </div>
+
+                                {% endif %}
+
+                                <!-- Online Badge -->
+                                <div class="profile-status"></div>
+
+                                <!-- Camera Button -->
+                                <label for="id_profile_pic"
+                                       class="camera-btn">
+
+                                    <i class="fas fa-camera"></i>
+
+                                </label>
+
+                            </div>
+
+                            <!-- Upload Input -->
+                            <input type="file"
+                                   name="profile_pic"
+                                   id="id_profile_pic"
+                                   accept="image/*">
+
+                            <!-- Text -->
+                            <div class="mt-4">
+
+                                <h4 class="profile-title">
+                                    {{ student.name }}
+                                </h4>
+
+                                <p class="profile-subtitle">
+                                    Student Profile Management
+                                </p>
+
+                            </div>
+
+                            <!-- Hint -->
+                            <div class="upload-hint mt-3">
+
+                                <i class="fas fa-image me-2"></i>
+
+                                JPG, PNG or GIF · Max 5MB
+
+                            </div>
+
+                            {% if form.profile_pic.errors %}
+                                <div class="text-danger small mt-2">
+                                    {% for error in form.profile_pic.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Form Fields -->
+                        <div class="row g-4">
+
+                            <!-- Name -->
+                            <div class="col-md-6">
+
+                                <label class="form-label custom-label">
+                                    Full Name
+                                </label>
+
+                                {{ form.name }}
+
+                                {% if form.name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ form.name.errors|striptags }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+
+                                <label class="form-label custom-label">
+                                    Email Address
+                                </label>
+
+                                <input type="email"
+                                       value="{{ user.email }}"
+                                       class="form-control custom-input"
+                                       readonly
+                                       disabled>
+
+                                <small class="text-muted small-note">
+                                    Email cannot be changed
+                                </small>
+
+                            </div>
+
+                            <!-- Department -->
+                            <div class="col-md-6">
+
+                                <label class="form-label custom-label">
+                                    Department
+                                </label>
+
+                                {{ form.department }}
+
+                                {% if form.department.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ form.department.errors|striptags }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                            <!-- DOB -->
+                            <div class="col-md-6">
+
+                                <label class="form-label custom-label">
+                                    Date of Birth
+                                </label>
+
+                                {{ form.date_of_birth }}
+
+                                {% if form.date_of_birth.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ form.date_of_birth.errors|striptags }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="mt-5 pt-2">
+
+                            <!-- Save -->
+                            <button type="submit"
+                                    class="btn save-btn w-100 mb-3">
+
+                                <i class="fas fa-save me-2"></i>
+
+                                Save Changes
+
+                            </button>
+
+                            <div class="row g-3">
+
+                                <!-- Password -->
+                                <div class="col-6">
+
+                                    <a href="{% url 'password_change' %}"
+                                       class="btn password-btn w-100">
+
+                                        <i class="fas fa-key me-2"></i>
+
+                                        Password
+
+                                    </a>
+
+                                </div>
+
+                                <!-- Cancel -->
+                                <div class="col-6">
+
+                                    <a href="{% url 'sms:student_detail' student.id %}"
+                                       class="btn cancel-btn w-100">
+
+                                        <i class="fas fa-arrow-left me-2"></i>
+
+                                        Cancel
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
                 </div>
             </div>
-
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-
-                <!-- Hidden Fields (Preserved) -->
-                <input type="hidden" name="roll_number" value="{{ student.roll_number }}">
-                <input type="hidden" name="year_of_admission" value="{{ student.year_of_admission }}">
-
-                <!-- Name and Email Row -->
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            <i class="fas fa-user me-1 text-primary"></i>Full Name
-                        </label>
-                        {{ form.name }}
-                        {% if form.name.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.name.errors|striptags }}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            <i class="fas fa-envelope me-1 text-primary"></i>Email Address
-                        </label>
-                        <input type="email" name="email" value="{{ user.email }}" class="form-control">
-                        <small class="text-muted">Email cannot be changed. Contact admin for assistance.</small>
-                    </div>
-                </div>
-
-                <!-- Department and Date of Birth Row -->
-                <div class="row g-3 mt-2">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            <i class="fas fa-building me-1 text-primary"></i>Department
-                        </label>
-                        {{ form.department }}
-                        {% if form.department.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.department.errors|striptags }}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            <i class="fas fa-calendar-alt me-1 text-primary"></i>Date of Birth
-                        </label>
-                        {{ form.date_of_birth }}
-                        {% if form.date_of_birth.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.date_of_birth.errors|striptags }}
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Profile Picture Section -->
-                <div class="mt-4">
-                    <label class="form-label fw-semibold">
-                        <i class="fas fa-camera me-1 text-primary"></i>Profile Picture
-                    </label>
-                    {{ form.profile_pic }}
-                    
-                    {% if student.profile_pic %}
-                        <div class="mt-3 p-3 bg-light rounded-3 d-flex align-items-center gap-3">
-                            <img src="{{ student.profile_pic.url }}" width="80" height="80" class="rounded-circle shadow-sm">
-                            <div>
-                                <small class="text-muted d-block">Current profile picture</small>
-                                <small class="text-secondary">Upload a new image to replace it</small>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="mt-2 text-muted small">
-                            <i class="fas fa-info-circle"></i> No profile picture uploaded
-                        </div>
-                    {% endif %}
-                    
-                    {% if form.profile_pic.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ form.profile_pic.errors|striptags }}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="mt-4 pt-3">
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
-                        <i class="fas fa-save me-2"></i>Save Changes
-                    </button>
-                    
-                    <div class="row g-2 mt-3">
-                        <div class="col-md-6">
-                            <a href="{% url 'password_change' %}" class="btn btn-outline-warning w-100 py-2">
-                                <i class="fas fa-key me-2"></i>Change Password
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="{% url 'sms:student_detail' student.id %}" class="btn btn-outline-secondary w-100 py-2">
-                                <i class="fas fa-times me-2"></i>Cancel
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 </div>
 
+<!-- ========================================= -->
+<!-- CSS -->
+<!-- ========================================= -->
+
 <style>
-    /* Form field styling */
-    form input:not([type="hidden"]):not([type="file"]),
-    form select,
-    form textarea {
-        width: 100%;
-        padding: 0.6rem 0.75rem;
-        font-size: 0.95rem;
-        border: 1px solid #ced4da;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        background-color: #fff;
+
+/* Body */
+body {
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc,
+            #eef4ff
+        );
+}
+
+/* Main Card */
+.main-card {
+
+    border-radius: 28px;
+
+    background:
+        rgba(255,255,255,0.85);
+
+    backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 25px 60px rgba(15,23,42,0.08);
+
+    transition: all 0.4s ease;
+}
+
+.main-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 30px 80px rgba(15,23,42,0.12);
+}
+
+/* Accent */
+.top-accent {
+
+    height: 6px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0f172a,
+            #2563eb,
+            #60a5fa,
+            #0f172a
+        );
+
+    background-size: 300% 300%;
+
+    animation: gradientMove 8s ease infinite;
+}
+
+/* Header */
+.header-icon {
+
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: auto auto 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dbeafe,
+            #eff6ff
+        );
+
+    box-shadow:
+        0 12px 30px rgba(37,99,235,0.12);
+}
+
+.header-icon i {
+
+    font-size: 2rem;
+
+    color: #2563eb;
+}
+
+.page-title {
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+    margin-bottom: 10px;
+}
+
+.page-subtitle {
+
+    color: #64748b;
+
+    font-size: 0.95rem;
+}
+
+/* Info Card */
+.info-card {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(248,250,252,0.9),
+            rgba(255,255,255,0.8)
+        );
+
+    border-radius: 22px;
+
+    padding: 24px;
+
+    border: 1px solid rgba(226,232,240,0.7);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.info-box {
+
+    padding: 18px;
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow:
+        0 8px 24px rgba(15,23,42,0.04);
+}
+
+.info-label {
+
+    display: block;
+
+    font-size: 0.72rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    color: #64748b;
+
+    margin-bottom: 6px;
+}
+
+.info-value {
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+    font-size: 1rem;
+}
+
+/* ========================================= */
+/* PROFILE UI */
+/* ========================================= */
+
+.profile-image-wrapper {
+
+    width: 180px;
+    height: 180px;
+
+    margin: auto;
+
+    position: relative;
+
+    border-radius: 50%;
+
+    padding: 5px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #1d4ed8,
+            #60a5fa,
+            #0f172a
+        );
+
+    background-size: 300% 300%;
+
+    animation:
+        gradientMove 8s ease infinite,
+        floatProfile 4s ease-in-out infinite;
+
+    box-shadow:
+        0 20px 50px rgba(37,99,235,0.25),
+        0 0 40px rgba(96,165,250,0.18);
+}
+
+/* Image */
+.profile-image {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 4px solid rgba(255,255,255,0.95);
+
+    background: white;
+
+    transition: all 0.4s ease;
+}
+
+.profile-image:hover {
+    transform: scale(1.03);
+}
+
+/* Placeholder */
+.profile-placeholder {
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc,
+            #e2e8f0
+        );
+
+    border: 4px solid rgba(255,255,255,0.95);
+}
+
+.profile-placeholder i {
+
+    font-size: 4rem;
+
+    color: #94a3b8;
+}
+
+/* Camera Button */
+.camera-btn {
+
+    position: absolute;
+
+    bottom: 10px;
+    right: 10px;
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1e40af
+        );
+
+    border: 4px solid white;
+
+    box-shadow:
+        0 10px 25px rgba(37,99,235,0.4);
+
+    transition: all 0.3s ease;
+
+    z-index: 20;
+}
+
+.camera-btn:hover {
+
+    transform:
+        scale(1.12)
+        rotate(8deg);
+
+    box-shadow:
+        0 14px 30px rgba(37,99,235,0.5);
+}
+
+/* Online Badge */
+.profile-status {
+
+    position: absolute;
+
+    top: 18px;
+    right: 20px;
+
+    width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    border: 3px solid white;
+
+    box-shadow:
+        0 0 16px rgba(34,197,94,0.5);
+}
+
+/* Hide Upload */
+#id_profile_pic {
+    display: none;
+}
+
+/* Title */
+.profile-title {
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+    margin-bottom: 6px;
+}
+
+/* Subtitle */
+.profile-subtitle {
+
+    color: #64748b;
+
+    font-size: 0.95rem;
+}
+
+/* Hint */
+.upload-hint {
+
+    display: inline-flex;
+    align-items: center;
+
+    padding: 10px 18px;
+
+    border-radius: 30px;
+
+    background:
+        rgba(241,245,249,0.9);
+
+    backdrop-filter: blur(12px);
+
+    color: #475569;
+
+    font-size: 0.78rem;
+
+    border: 1px solid rgba(226,232,240,0.8);
+
+    box-shadow:
+        0 8px 20px rgba(15,23,42,0.04);
+}
+
+/* Inputs */
+.form-control,
+select {
+
+    padding: 0.9rem 1rem;
+
+    border-radius: 16px;
+
+    border: 1px solid #dbe4f0;
+
+    background: rgba(255,255,255,0.92);
+
+    transition: all 0.3s ease;
+
+    font-size: 0.92rem;
+}
+
+.form-control:focus,
+select:focus {
+
+    border-color: #3b82f6;
+
+    box-shadow:
+        0 0 0 4px rgba(59,130,246,0.12);
+
+    outline: none;
+}
+
+.custom-label {
+
+    font-weight: 600;
+
+    color: #334155;
+
+    margin-bottom: 10px;
+}
+
+.small-note {
+
+    font-size: 0.75rem;
+}
+
+/* Buttons */
+.save-btn {
+
+    padding: 14px;
+
+    border-radius: 18px;
+
+    border: none;
+
+    color: white;
+
+    font-weight: 600;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #2563eb
+        );
+
+    box-shadow:
+        0 14px 30px rgba(37,99,235,0.25);
+
+    transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+
+    transform: translateY(-2px);
+
+    color: white;
+
+    box-shadow:
+        0 18px 40px rgba(37,99,235,0.35);
+}
+
+.password-btn,
+.cancel-btn {
+
+    padding: 12px;
+
+    border-radius: 16px;
+
+    font-weight: 600;
+
+    transition: all 0.3s ease;
+}
+
+.password-btn {
+
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+.cancel-btn {
+
+    background: #f1f5f9;
+
+    color: #475569;
+}
+
+.password-btn:hover,
+.cancel-btn:hover {
+
+    transform: translateY(-2px);
+}
+
+/* Breadcrumb */
+.breadcrumb-item a {
+
+    color: #64748b;
+
+    font-size: 0.85rem;
+}
+
+.breadcrumb-item.active {
+
+    color: #0f172a;
+
+    font-weight: 600;
+}
+
+/* Animations */
+@keyframes floatProfile {
+
+    0% {
+        transform: translateY(0px);
     }
-    
-    form input:focus,
-    form select:focus,
-    form textarea:focus {
-        border-color: #2c5282;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.1);
+
+    50% {
+        transform: translateY(-8px);
     }
-    
-    /* File input styling */
-    form input[type="file"] {
-        padding: 0.4rem 0.75rem;
-        border: 1px dashed #ced4da;
-        background-color: #f8f9fa;
-        cursor: pointer;
+
+    100% {
+        transform: translateY(0px);
     }
-    
-    form input[type="file"]:hover {
-        border-color: #2c5282;
-        background-color: #f0f4f8;
+}
+
+@keyframes gradientMove {
+
+    0% {
+        background-position: 0% 50%;
     }
-    
-    /* Email field styling */
-    input[name="email"] {
-        background-color: #f8f9fa;
-        cursor: not-allowed;
+
+    50% {
+        background-position: 100% 50%;
     }
-    
-    /* Button styling */
-    .btn-primary {
-        background-color: #1a2a4f;
-        border-color: #1a2a4f;
-        transition: all 0.2s ease;
+
+    100% {
+        background-position: 0% 50%;
     }
-    
-    .btn-primary:hover {
-        background-color: #0f1a33;
-        border-color: #0f1a33;
-        transform: translateY(-1px);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .card-body {
+        padding: 1.5rem !important;
     }
-    
-    .btn-outline-warning {
-        border-color: #ffc107;
-        color: #856404;
+
+    .profile-image-wrapper {
+
+        width: 150px;
+        height: 150px;
     }
-    
-    .btn-outline-warning:hover {
-        background-color: #ffc107;
-        border-color: #ffc107;
-        transform: translateY(-1px);
-        color: #856404;
+
+    .camera-btn {
+
+        width: 46px;
+        height: 46px;
     }
-    
-    .btn-outline-secondary:hover {
-        transform: translateY(-1px);
+
+    .profile-placeholder i {
+
+        font-size: 3rem;
     }
-    
-    /* Alert styling */
-    .alert-info {
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    }
-    
-    /* Breadcrumb */
-    .breadcrumb {
-        background-color: transparent;
-        padding: 0;
-    }
-    
-    .breadcrumb-item a {
-        color: #2c5282;
-        text-decoration: none;
-    }
-    
-    .breadcrumb-item a:hover {
-        text-decoration: underline;
-    }
-    
-    .breadcrumb-item.active {
-        color: #6c757d;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .card-body {
-            padding: 1.5rem !important;
-        }
-        
-        .btn {
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
-        
-        .row.g-3 {
-            margin-top: 0;
-        }
-    }
+
+}
+
 </style>
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- ========================================= -->
+<!-- IMAGE PREVIEW SCRIPT -->
+<!-- ========================================= -->
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const fileInput = document.getElementById('id_profile_pic');
+
+    if (fileInput) {
+
+        fileInput.addEventListener('change', function () {
+
+            if (this.files && this.files[0]) {
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    let img = document.getElementById('currentProfilePic');
+
+                    if (img) {
+
+                        img.src = e.target.result;
+
+                    } else {
+
+                        const placeholder =
+                            document.getElementById('profilePlaceholder');
+
+                        if (placeholder) {
+
+                            const newImg =
+                                document.createElement('img');
+
+                            newImg.src = e.target.result;
+
+                            newImg.id = 'currentProfilePic';
+
+                            newImg.className = 'profile-image';
+
+                            placeholder.replaceWith(newImg);
+                        }
+                    }
+                };
+
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+});
+
+</script>
 
 {% endblock %}
